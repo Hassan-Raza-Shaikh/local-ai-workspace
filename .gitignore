@@ -1,0 +1,19 @@
+# Hassan's Local AI Workspace GitIgnore
+
+# Ignored Folders
+data/
+.env
+.continue/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Odysseus internal persist directories (if versioning parent directory)
+odysseus/data/
+odysseus/logs/
+odysseus/.ssh/
+odysseus/data/local/
+odysseus/data/huggingface/
