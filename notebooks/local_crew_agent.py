@@ -29,9 +29,9 @@ def main():
             print("Please create an API key at https://aistudio.google.com/ and add it to /Users/hassan/local-ai/.env")
             sys.exit(1)
             
-        print("Connecting to cloud Google Gemini (1.5 Flash)...")
+        print("Connecting to cloud Google Gemini (2.5 Flash)...")
         local_llm = LLM(
-            model="gemini/gemini-1.5-flash",
+            model="gemini/gemini-2.5-flash",
             api_key=api_key
         )
     else:
