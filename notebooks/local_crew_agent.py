@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
+import os
 import sys
+from dotenv import load_dotenv
+
+# ============================================================
+# ⚙️ CONFIGURATION TOGGLE
+# Set AI_ENGINE to "local" (uses Ollama Llama 3) or "cloud" (uses Google Gemini 1.5)
+AI_ENGINE = "cloud" 
+# ============================================================
+
+# Load environment variables from local-ai root
+load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
 
 # Demonstration of a local multi-agent Crew using CrewAI and Ollama Llama 3
 try:
@@ -9,15 +20,28 @@ except ImportError:
     sys.exit(1)
 
 def main():
-    print("=== Initialize Local AI Crew ===")
+    print("=== Initialize AI Crew ===")
     
-    # 1. Setup local LLM configuration (pointing to Ollama Llama 3)
-    # Llama 3 8B is excellent at instruction following for agent roles
-    print("Connecting to local Ollama (Llama 3)...")
-    local_llm = LLM(
-        model="ollama/llama3",
-        base_url="http://localhost:11434"
-    )
+    if AI_ENGINE == "cloud":
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            print("\n❌ Error: GEMINI_API_KEY is missing in your .env file!")
+            print("Please create an API key at https://aistudio.google.com/ and add it to /Users/hassan/local-ai/.env")
+            sys.exit(1)
+            
+        print("Connecting to cloud Google Gemini (1.5 Flash)...")
+        local_llm = LLM(
+            model="gemini/gemini-1.5-flash",
+            api_key=api_key
+        )
+    else:
+        # 1. Setup local LLM configuration (pointing to Ollama Llama 3)
+        # Llama 3 8B is excellent at instruction following for agent roles
+        print("Connecting to local Ollama (Llama 3)...")
+        local_llm = LLM(
+            model="ollama/llama3",
+            base_url="http://localhost:11434"
+        )
 
     # 2. Define our Agents with distinct roles and backstories
     print("Assembling the agents...")

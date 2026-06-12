@@ -1,28 +1,52 @@
 #!/usr/bin/env python3
 import os
 import sys
+from dotenv import load_dotenv
 
-# Simple local RAG example using LlamaIndex and Ollama
+# ============================================================
+# ⚙️ CONFIGURATION TOGGLE
+# Set AI_ENGINE to "local" (uses Ollama Llama 3) or "cloud" (uses Google Gemini 1.5)
+AI_ENGINE = "cloud" 
+# ============================================================
+
+# Load environment variables from local-ai root
+load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
+
 try:
     from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
-    from llama_index.llms.ollama import Ollama
-    from llama_index.embeddings.ollama import OllamaEmbedding
+    if AI_ENGINE == "cloud":
+        from llama_index.llms.gemini import Gemini
+        from llama_index.embeddings.gemini import GeminiEmbedding
+    else:
+        from llama_index.llms.ollama import Ollama
+        from llama_index.embeddings.ollama import OllamaEmbedding
 except ImportError:
-    print("Error: LlamaIndex packages are missing. Make sure you run your script using the Miniconda python.")
+    print("Error: LlamaIndex packages are missing. Make sure you run inside Miniconda.")
     sys.exit(1)
 
 def main():
     print("=== Initialize Local RAG System ===")
     
-    # 1. Setup local LLM via Ollama (using the llama3 model we pulled)
-    print("Connecting to local Ollama (Llama 3)...")
-    llm = Ollama(model="llama3", request_timeout=120.0)
-    Settings.llm = llm
-    
-    # Use Ollama's local nomic-embed-text model for embeddings (100% local)
-    print("Initializing local nomic-embed-text embedding engine...")
-    embed_model = OllamaEmbedding(model_name="nomic-embed-text")
-    Settings.embed_model = embed_model
+    if AI_ENGINE == "cloud":
+        # 1. Setup Cloud Gemini LLM and Embeddings
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            print("\n❌ Error: GEMINI_API_KEY is missing in your .env file!")
+            print("Please create an API key at https://aistudio.google.com/ and add it to /Users/hassan/local-ai/.env")
+            sys.exit(1)
+            
+        print("Connecting to cloud Google Gemini (1.5 Flash)...")
+        Settings.llm = Gemini(model="models/gemini-1.5-flash", api_key=api_key)
+        
+        print("Initializing cloud Gemini embedding engine...")
+        Settings.embed_model = GeminiEmbedding(model_name="models/text-embedding-004", api_key=api_key)
+    else:
+        # 1. Setup Local Ollama LLM and Embeddings
+        print("Connecting to local Ollama (Llama 3)...")
+        Settings.llm = Ollama(model="llama3", request_timeout=120.0)
+        
+        print("Initializing local nomic-embed-text embedding engine...")
+        Settings.embed_model = OllamaEmbedding(model_name="nomic-embed-text")
     
     # 2. Check if there are files to read
     data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data"))
