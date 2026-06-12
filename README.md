@@ -77,6 +77,32 @@ We have configured your system settings for Continue.dev to automatically use Ll
 
 ---
 
+## ☁️ Hybrid Local-Cloud Support (Google Gemini)
+
+You can run both the RAG script and the CrewAI multi-agent script using a premium, fast cloud model (Google Gemini) instead of local Ollama. This bypasses local CPU/GPU limits and local model knowledge cutoffs.
+
+### Setup and Configuration
+
+1. **API Credentials**: Save your Gemini API key in the root environment file at [`/Users/hassan/local-ai/.env`](file:///Users/hassan/local-ai/.env):
+   ```env
+   GEMINI_API_KEY="your_api_key_here"
+   ```
+   *(Note: This file is automatically ignored by Git via `.gitignore` to keep your credentials private).*
+
+2. **Toggle AI Engine**:
+   In both `notebooks/query_local_data.py` and `notebooks/local_crew_agent.py`, find the configuration toggle at the top and set:
+   ```python
+   # Set AI_ENGINE to "local" (uses Ollama Llama 3) or "cloud" (uses Google Gemini 2.5)
+   AI_ENGINE = "cloud"
+   ```
+   Set it back to `"local"` to run fully offline using Ollama.
+
+3. **Configured Cloud Models**:
+   - **LLM**: `models/gemini-2.5-flash`
+   - **Embeddings**: `models/gemini-embedding-2`
+
+---
+
 ## 🦙 Managing Local LLMs (Ollama)
 Ollama runs in your Mac's menu bar and executes models using Apple Silicon's GPU. Here are the most useful commands:
 
