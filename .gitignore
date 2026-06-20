@@ -17,3 +17,10 @@ odysseus/logs/
 odysseus/.ssh/
 odysseus/data/local/
 odysseus/data/huggingface/
+
+# Third-party stacks and workspaces
+dify/
+maxun/
+fooocus/
+hyperframes/
+openhands_workspace/

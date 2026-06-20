@@ -1,124 +1,113 @@
-# 🧠 Hassan's Local AI Workspace Hub
+# 🧠 Hassan's Next-Level Local AI Workspace Hub
 
-Welcome to your central workspace for local AI engineering, agents, and private document search on your MacBook Pro.
-
----
-
-## 📂 Workspace Folder Structure
-
-*   📁 **`odysseus/`**: Your self-hosted local AI dashboard workspace. Contains your local vector databases, notes, task manager, and local chat client.
-*   📁 **`data/`**: The directory to drop your private documents (PDFs, Word docs, CSVs, TXT files). The RAG scripts and Odysseus automatically index files dropped here.
-*   📁 **`notebooks/`**: Your local scratchpad for Python scripts and Jupyter notebook experiments using LangChain and LlamaIndex.
-*   📄 **`start_workspace.sh`**: The master launch script that starts your environment.
+Welcome to your central workspace for local AI engineering, visual workflow automation, multi-agent coding, and private document processing on your M1 Pro 32GB RAM MacBook Pro.
 
 ---
 
-## 🚀 How to Run the Workspace
+## 🚀 The Launch Control Center (RAM & CPU Optimization)
 
-You can launch your local AI dashboard simply by running the master script in your terminal:
+To save battery, CPU, and RAM, **all heavy tools remain stopped by default**. You can start specific tools, stacks, or the entire suite on-demand, and shut everything down immediately using a single command.
 
+### 1. Start Tools Menu (Interactive Launcher)
+Run the master script to view the CLI menu and choose which tools to launch:
+```bash
+/Users/hassan/local-ai/start_tools.sh
+```
+
+### 2. Stop All Tools (Reclaim Memory)
+Stop all Docker containers and free up your Mac's RAM immediately when you are done working:
+```bash
+/Users/hassan/local-ai/stop_tools.sh
+```
+
+### 3. Core Odysseus Dashboard Launcher
+Starts the core offline database, ntfy, SearXNG search engine, and Odysseus React portal:
 ```bash
 /Users/hassan/local-ai/start_workspace.sh
 ```
 
-**What this script does:**
-1.  Verifies if **Docker Desktop** is running (starts it if it isn't).
-2.  Verifies if **Ollama** is active (starts it if it isn't).
-3.  Launches the Odysseus docker stack (fastapi backend, react frontend, ChromaDB vector store, and SearXNG search engine).
-4.  Opens your browser automatically to the Odysseus UI at **http://localhost:7000**.
+---
+
+## 🛠️ Active Port Registry & Access Guide
+
+When active, your local web services are mapped to these URLs:
+
+| Service | Port / URL | Description | Start Method |
+| :--- | :--- | :--- | :--- |
+| **Odysseus Hub** | http://localhost:7000 | Core local knowledge dashboard (FastAPI + React) | `./start_workspace.sh` |
+| **Open WebUI** | http://localhost:3000 | ChatGPT-style local chat with document upload & RAG | Launcher option `1` |
+| **Stirling-PDF** | http://localhost:8082 | Offline web utility to merge, OCR, sign, compress PDFs | Launcher option `1` |
+| **n8n Automation** | http://localhost:5678 | Self-hosted workflow builder (Zapier alternative) | Launcher option `1` |
+| **Langflow** | http://localhost:7860 | Visual agent builder & drag-and-drop RAG designer | Launcher option `1` |
+| **Dify Platform** | http://localhost:8090 | Collaborative LLM app builder & workflow studio | Launcher option `2` |
+| **Maxun Scraper** | http://localhost:8086 | No-code point-and-click web data extractor | Launcher option `3` |
+| **OpenHands** | http://localhost:3001 | Autonomous software development agent (Devin alternative) | Launcher option `4` |
+| **Fooocus WebUI** | http://localhost:7865 | Offline SDXL image generator (Midjourney alternative) | Launcher option `5` |
 
 ---
 
-## 🛠️ Included Tools & How to Use Them
+## 📂 Project Directory Map
 
-### 1. File Conversion (`markitdown`)
-You have Microsoft's `markitdown` installed in your path. Before feeding PDFs, Word files, or Excel sheets to local models, you can convert them into clean markdown tables and structured text:
+*   📁 **`odysseus/`**: Core Odysseus dashboard source and compose stack.
+*   📁 **`dify/`**: Dify application platform compose stack.
+*   📁 **`maxun/`**: Maxun point-and-click scraper stack.
+*   📁 **`fooocus/`**: Fooocus offline SDXL generator repository.
+*   📁 **`hyperframes/`**: HeyGen HTML-to-video boilerplate folder.
+*   📁 **`data/`**: Drop your private documents (PDF, CSV, TXT) here for RAG indexing.
+*   📁 **`notebooks/`**: Python scripts and agent experiments.
+    *   📄 `transcribe.py` (Whisper offline speech-to-text script)
+    *   📄 `browser_use_demo.py` (Web automation agent script)
+    *   📄 `query_local_data.py` (Central LlamaIndex document RAG demo)
+    *   📄 `local_crew_agent.py` (Collaborative multi-agent script)
+*   📁 **`apps/`**: Interactive chat UIs (Streamlit/Chainlit).
 
+---
+
+## 🐍 Command Line & Script Tools
+
+### 1. Offline Video Downloader (`yt-dlp`)
+Download high-quality videos or audio files locally:
+```bash
+yt-dlp "https://www.youtube.com/watch?v=..."
+```
+
+### 2. Local GPU-Accelerated Transcription (`Whisper`)
+Transcribe local audio or video files offline using Apple Silicon GPU (MPS) acceleration:
+```bash
+python /Users/hassan/local-ai/notebooks/transcribe.py /path/to/audio_file.mp3
+```
+*Outputs a matching `.txt` file containing the transcription in the same folder.*
+
+### 3. Agentic Browser Automation (`browser-use`)
+Run scripts where AI agents navigate the web for you:
+```bash
+python /Users/hassan/local-ai/notebooks/browser_use_demo.py
+```
+
+### 4. Document Scraper for RAG (`crawl4ai`)
+Scrape web pages directly into LLM-friendly markdown. Sample Python code:
+```python
+import asyncio
+from crawl4ai import AsyncWebCrawler
+
+async def main():
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(url="https://news.ycombinator.com")
+        print(result.markdown)
+
+asyncio.run(main())
+```
+
+### 5. PDF to Markdown Conversion (`markitdown`)
+Convert document pages locally to Markdown tables/text:
 ```bash
 markitdown your_file.pdf > data/your_file.md
 ```
 
-### 2. Local Document Search Demo (RAG)
-We have written a local RAG demo script inside `notebooks/` that reads documents from your `data/` folder, indexes them locally, and queries them using your local Llama 3 model.
+### 6. HTML-to-Video Compiler (`Hyperframes`)
+Create programmatic videos using HTML/CSS/JS. From the `hyperframes/` folder, run:
+- **Preview video composition**: `npx hyperframes preview`
+- **Render composition to MP4**: `npx hyperframes render`
 
-To run it:
-```bash
-python /Users/hassan/local-ai/notebooks/query_local_data.py
-```
-
-### 3. Asynchronous Chat Interface (Chainlit)
-You have a full-featured, streaming ChatGPT-like web interface that runs locally.
-
-To launch the Chat UI:
-```bash
-chainlit run /Users/hassan/local-ai/apps/chat_ui.py
-```
-
-### 4. Local AI Data Dashboard (Streamlit)
-You have a structured data and analysis dashboard to summarize text and generate embeddings:
-
-To launch the Dashboard:
-```bash
-streamlit run /Users/hassan/local-ai/apps/data_dashboard.py
-```
-
-### 5. Multi-Agent Collaboration (CrewAI)
-You have a local script that coordinates multiple autonomous agents working together locally to solve tech research tasks:
-
-To run the Crew demo:
-```bash
-python /Users/hassan/local-ai/notebooks/local_crew_agent.py
-```
-
-### 6. IDE Local Copilot (Continue.dev)
-We have configured your system settings for Continue.dev to automatically use Llama 3 for chat, autocomplete, and refactoring commands.
-*   **Settings Location**: [config.json](file:///Users/hassan/.continue/config.json)
-*   **Action**: Simply install the **Continue** extension in VS Code or Cursor. It will read this config and immediately enable local code autocomplete!
-
----
-
-## ☁️ Hybrid Local-Cloud Support (Google Gemini)
-
-You can run both the RAG script and the CrewAI multi-agent script using a premium, fast cloud model (Google Gemini) instead of local Ollama. This bypasses local CPU/GPU limits and local model knowledge cutoffs.
-
-### Setup and Configuration
-
-1. **API Credentials**: Save your Gemini API key in the root environment file at [`/Users/hassan/local-ai/.env`](file:///Users/hassan/local-ai/.env):
-   ```env
-   GEMINI_API_KEY="your_api_key_here"
-   ```
-   *(Note: This file is automatically ignored by Git via `.gitignore` to keep your credentials private).*
-
-2. **Toggle AI Engine**:
-   In both `notebooks/query_local_data.py` and `notebooks/local_crew_agent.py`, find the configuration toggle at the top and set:
-   ```python
-   # Set AI_ENGINE to "local" (uses Ollama Llama 3) or "cloud" (uses Google Gemini 2.5)
-   AI_ENGINE = "cloud"
-   ```
-   Set it back to `"local"` to run fully offline using Ollama.
-
-3. **Configured Cloud Models**:
-   - **LLM**: `models/gemini-2.5-flash`
-   - **Embeddings**: `models/gemini-embedding-2`
-
----
-
-## 🦙 Managing Local LLMs (Ollama)
-Ollama runs in your Mac's menu bar and executes models using Apple Silicon's GPU. Here are the most useful commands:
-
-*   **List downloaded models**:
-    ```bash
-    ollama list
-    ```
-*   **Pull a new model** (e.g. Google's Gemma 2):
-    ```bash
-    ollama pull gemma2
-    ```
-*   **Pull a dedicated embedding model** (for fast document indexing):
-    ```bash
-    ollama pull nomic-embed-text
-    ```
-*   **Run a model directly in your command line**:
-    ```bash
-    ollama run llama3
-    ```
+### 7. Apple Silicon Hardware Optimizations
+Instead of using Intel-specific `openvino.genai` packages, we leverage native Apple Metal Performance Shaders (MPS) and PyTorch MPS fallbacks in python, and native CoreML runtimes in Ollama to ensure maximum model performance.
