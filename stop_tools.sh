@@ -45,13 +45,31 @@ else
     echo "OpenHands container not running."
 fi
 
-# 5. Shut Down Local Ollama (Optional - but good for memory)
-echo -e "\n${BOLD}${BLUE}[5/5] Checking Ollama status...${NC}"
+# 5. Stop local Python AI services (ComfyUI and Fooocus)
+echo -e "\n${BOLD}${BLUE}[5/6] Stopping local python-based AI services...${NC}"
+if pgrep -f "python.*main.py.*8188" > /dev/null; then
+    echo "Stopping ComfyUI..."
+    pkill -f "python.*main.py.*8188" || true
+    echo -e "${GREEN}✔ ComfyUI stopped.${NC}"
+else
+    echo "ComfyUI is not running."
+fi
+
+if pgrep -f "entry_with_update.py" > /dev/null; then
+    echo "Stopping Fooocus..."
+    pkill -f "entry_with_update.py" || true
+    echo -e "${GREEN}✔ Fooocus stopped.${NC}"
+else
+    echo "Fooocus is not running."
+fi
+
+# 6. Shut Down Local Ollama (Optional - but good for memory)
+echo -e "\n${BOLD}${BLUE}[6/6] Checking Ollama status...${NC}"
 if pgrep -x "Ollama" > /dev/null; then
     echo -e "${YELLOW}Ollama background service is still running in menu bar.${NC}"
     echo -e "You can quit it manually from the macOS status bar to reclaim memory."
 fi
 
 echo -e "\n${BOLD}${GREEN}===========================================${NC}"
-echo -e "${BOLD}${GREEN}   All containers stopped. Memory cleared!  ${NC}"
+echo -e "${BOLD}${GREEN}   All services stopped. Memory cleared!   ${NC}"
 echo -e "${BOLD}${GREEN}===========================================${NC}"

@@ -37,11 +37,12 @@ show_menu() {
     echo -e "  ${BOLD}3)${NC} Maxun Point-and-Click Web Scraper          [Docker Stack]"
     echo -e "  ${BOLD}4)${NC} OpenHands Autonomous Developer Agent       [Docker Script]"
     echo -e "  ${BOLD}5)${NC} Fooocus Offline SDXL Image Generator       [Python Script]"
-    echo -e "  ${BOLD}6)${NC} Start ALL Tools                             [High Resource!]"
-    echo -e "  ${BOLD}7)${NC} Stop ALL Tools                              [Free RAM]"
-    echo -e "  ${BOLD}8)${NC} Exit"
+    echo -e "  ${BOLD}6)${NC} ComfyUI Offline Image Generator             [Python Script]"
+    echo -e "  ${BOLD}7)${NC} Start ALL Tools                             [High Resource!]"
+    echo -e "  ${BOLD}8)${NC} Stop ALL Tools                              [Free RAM]"
+    echo -e "  ${BOLD}9)${NC} Exit"
     echo -e ""
-    echo -n "Enter option [1-8]: "
+    echo -n "Enter option [1-9]: "
 }
 
 launch_stack() {
@@ -84,6 +85,11 @@ launch_fooocus() {
     /Users/hassan/local-ai/start_fooocus.sh
 }
 
+launch_comfyui() {
+    echo -e "\n${BOLD}${BLUE}Launching ComfyUI script...${NC}"
+    /Users/hassan/local-ai/start_comfyui.sh
+}
+
 # Main process loop
 if [[ "${1:-}" == "--all" ]]; then
     launch_stack
@@ -102,18 +108,19 @@ while true; do
         3) launch_maxun; break ;;
         4) launch_openhands; break ;;
         5) launch_fooocus; break ;;
-        6)
+        6) launch_comfyui; break ;;
+        7)
             launch_stack
             launch_dify
             launch_maxun
             launch_openhands
             break
             ;;
-        7)
+        8)
             /Users/hassan/local-ai/stop_tools.sh
             break
             ;;
-        8)
+        9)
             echo "Exiting."
             exit 0
             ;;

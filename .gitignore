@@ -23,4 +23,6 @@ dify/
 maxun/
 fooocus/
 hyperframes/
+comfyui/
 openhands_workspace/
+*.whl

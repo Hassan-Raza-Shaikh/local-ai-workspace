@@ -43,6 +43,7 @@ When active, your local web services are mapped to these URLs:
 | **Maxun Scraper** | http://localhost:8086 | No-code point-and-click web data extractor | Launcher option `3` |
 | **OpenHands** | http://localhost:3001 | Autonomous software development agent (Devin alternative) | Launcher option `4` |
 | **Fooocus WebUI** | http://localhost:7865 | Offline SDXL image generator (Midjourney alternative) | Launcher option `5` |
+| **ComfyUI WebUI** | http://localhost:8188 | Node-based offline image generator & workflow engine | Launcher option `6` |
 
 ---
 
@@ -52,6 +53,7 @@ When active, your local web services are mapped to these URLs:
 *   📁 **`dify/`**: Dify application platform compose stack.
 *   📁 **`maxun/`**: Maxun point-and-click scraper stack.
 *   📁 **`fooocus/`**: Fooocus offline SDXL generator repository.
+*   📁 **`comfyui/`**: ComfyUI node-based offline image generator repository.
 *   📁 **`hyperframes/`**: HeyGen HTML-to-video boilerplate folder.
 *   📁 **`data/`**: Drop your private documents (PDF, CSV, TXT) here for RAG indexing.
 *   📁 **`notebooks/`**: Python scripts and agent experiments.
