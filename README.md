@@ -117,7 +117,13 @@ Create programmatic videos using HTML/CSS/JS. From the `hyperframes/` folder, ru
 - **Preview video composition**: `npx hyperframes preview`
 - **Render composition to MP4**: `npx hyperframes render`
 
-### 7. Apple Silicon Hardware Optimizations
+### 7. Offline Image Generation (`Fooocus` & `ComfyUI`)
+Run high-quality text-to-image and image-to-image generation locally using Apple Silicon MPS GPU acceleration:
+- **Fooocus**: Choose option `5` in the launcher to spin up a simplified Web UI optimized for SDXL.
+- **ComfyUI**: Choose option `6` in the launcher to run the advanced node-based workflow editor on `http://localhost:8188`.
+- Both generators run fully offline and leverage PyTorch MPS to share macOS unified RAM.
+
+### 8. Apple Silicon Hardware Optimizations
 Instead of using Intel-specific `openvino.genai` packages, we leverage native Apple Metal Performance Shaders (MPS) and PyTorch MPS fallbacks in python, and native CoreML runtimes in Ollama to ensure maximum model performance.
 
 ---
