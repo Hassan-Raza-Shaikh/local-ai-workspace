@@ -117,3 +117,19 @@ Create programmatic videos using HTML/CSS/JS. From the `hyperframes/` folder, ru
 
 ### 7. Apple Silicon Hardware Optimizations
 Instead of using Intel-specific `openvino.genai` packages, we leverage native Apple Metal Performance Shaders (MPS) and PyTorch MPS fallbacks in python, and native CoreML runtimes in Ollama to ensure maximum model performance.
+
+---
+
+## 🦙 Specialized Local LLMs (Ollama)
+
+Your 32GB Mac has the following highly specialized models configured to run locally with zero limits:
+
+- **Coding Assistant**: `qwen2.5-coder:32b` (~19 GB) — World-class code writing, refactoring, and multi-file debugging.
+- **Creative & Chat**: `gemma2:27b` (~16 GB) — Google's top-tier general model for writing, brainstorming, and translation.
+- **Deep Reasoning**: `deepseek-r1:32b` (~19 GB) — Step-by-step chain-of-thought reasoning (comparable to OpenAI o1) for math, logic, and planning.
+- **Fast General Chat**: `gemma2:9b` (~5.5 GB) — Responsive, lightweight model for everyday quick queries.
+
+### CLI Reference:
+- **List installed models**: `ollama list`
+- **Run a model in terminal**: `ollama run <model_name>`
+- **Pull a new model**: `ollama pull <model_name>`
