@@ -98,11 +98,17 @@ async def main():
 asyncio.run(main())
 ```
 
-### 5. PDF to Markdown Conversion (`markitdown`)
-Convert document pages locally to Markdown tables/text:
-```bash
-markitdown your_file.pdf > data/your_file.md
-```
+### 5. PDF & Document Conversion (`markitdown`)
+Convert documents (PDFs, Word files, Excel, PowerPoint) to Markdown locally:
+- **Using the helper Python script**:
+  ```bash
+  python /Users/hassan/local-ai/notebooks/convert_doc.py /path/to/your_file.pdf
+  ```
+  *Outputs a matching `.md` file in the same directory.*
+- **Using the command line directly**:
+  ```bash
+  markitdown your_file.pdf > data/your_file.md
+  ```
 
 ### 6. HTML-to-Video Compiler (`Hyperframes`)
 Create programmatic videos using HTML/CSS/JS. From the `hyperframes/` folder, run:
