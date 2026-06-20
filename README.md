@@ -133,3 +133,35 @@ Your 32GB Mac has the following highly specialized models configured to run loca
 - **List installed models**: `ollama list`
 - **Run a model in terminal**: `ollama run <model_name>`
 - **Pull a new model**: `ollama pull <model_name>`
+
+---
+
+## 🔍 Retrieval-Augmented Generation (RAG) Guide
+
+Your workspace is built from the ground up to support both **Local Document RAG** and **Web RAG (Search-Augmented Generation)**. Here is how to use these capabilities:
+
+### 1. Local Document RAG (Querying your private files)
+Feed private PDFs, CSVs, or text files into your models without sending them to the cloud.
+
+*   **Via Open WebUI (`http://localhost:3000`)**:
+    1.  Start a new chat and select your local model (e.g., `qwen2.5-coder:32b`).
+    2.  Click the **`+`** (attachment) button and upload a document.
+    3.  Open WebUI will index it locally. Ask your question, and the model will answer using the document context.
+*   **Via Python Script (`query_local_data.py`)**:
+    1.  Drop text or PDF files into the [`data/`](file:///Users/hassan/local-ai/data) folder.
+    2.  Run the query script: `python /Users/hassan/local-ai/notebooks/query_local_data.py`
+    3.  To switch models, open the script and change: `Ollama(model="qwen2.5-coder:32b")`.
+
+### 2. Web RAG (Real-Time Web Search grounding)
+Let your local models search the web for the latest info before generating an answer.
+
+*   **Via Odysseus Hub (`http://localhost:7000`)**:
+    1.  Odysseus has a local **SearXNG** engine running in its Docker compose stack.
+    2.  Toggle **Web Search** in the Odysseus Chat interface. It will query SearXNG to search the web anonymously, scrape the results, and pass them as prompt context to your local LLM.
+*   **Via Open WebUI (`http://localhost:3000`)**:
+    1.  Go to **Admin Settings** -> **Web Search**.
+    2.  Enable web search and set the URL to your local SearXNG port at `http://host.docker.internal:8080`.
+    3.  Activate the globe icon in the chat bar to force search grounding on every query.
+*   **Via Python Agent (`local_crew_agent.py`)**:
+    1.  Equip your CrewAI agents with a search tool (like `TavilySearchResult` or a custom SearXNG wrapper).
+    2.  The agents will programmatically query the search API and synthesize the output.
