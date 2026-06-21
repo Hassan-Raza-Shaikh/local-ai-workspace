@@ -45,7 +45,7 @@ else
     echo "OpenHands container not running."
 fi
 
-# 5. Stop local Python AI services (ComfyUI and Fooocus)
+# 5. Stop local Python AI services (ComfyUI, Fooocus, Aider, Letta)
 echo -e "\n${BOLD}${BLUE}[5/6] Stopping local python-based AI services...${NC}"
 if pgrep -f "python.*main.py.*8188" > /dev/null; then
     echo "Stopping ComfyUI..."
@@ -61,6 +61,22 @@ if pgrep -f "entry_with_update.py" > /dev/null; then
     echo -e "${GREEN}✔ Fooocus stopped.${NC}"
 else
     echo "Fooocus is not running."
+fi
+
+if pgrep -f "aider.*--gui" > /dev/null; then
+    echo "Stopping Aider GUI..."
+    pkill -f "aider.*--gui" || true
+    echo -e "${GREEN}✔ Aider GUI stopped.${NC}"
+else
+    echo "Aider GUI is not running."
+fi
+
+if pgrep -f "letta server" > /dev/null; then
+    echo "Stopping Letta Server..."
+    pkill -f "letta server" || true
+    echo -e "${GREEN}✔ Letta Server stopped.${NC}"
+else
+    echo "Letta Server is not running."
 fi
 
 # 6. Shut Down Local Ollama (Optional - but good for memory)

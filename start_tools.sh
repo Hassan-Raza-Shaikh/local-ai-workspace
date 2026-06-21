@@ -38,11 +38,14 @@ show_menu() {
     echo -e "  ${BOLD}4)${NC} OpenHands Autonomous Developer Agent       [Docker Script]"
     echo -e "  ${BOLD}5)${NC} Fooocus Offline SDXL Image Generator       [Python Script]"
     echo -e "  ${BOLD}6)${NC} ComfyUI Offline Image Generator             [Python Script]"
-    echo -e "  ${BOLD}7)${NC} Start ALL Tools                             [High Resource!]"
-    echo -e "  ${BOLD}8)${NC} Stop ALL Tools                              [Free RAM]"
-    echo -e "  ${BOLD}9)${NC} Exit"
+    echo -e "  ${BOLD}7)${NC} Aider AI Pair Programmer (CLI)              [Python Script]"
+    echo -e "  ${BOLD}8)${NC} Aider AI Web GUI (Browser Board)            [Python Script]"
+    echo -e "  ${BOLD}9)${NC} Letta Stateful Agent Server                 [Python Script]"
+    echo -e "  ${BOLD}10)${NC} Start ALL Tools                            [High Resource!]"
+    echo -e "  ${BOLD}11)${NC} Stop ALL Tools                             [Free RAM]"
+    echo -e "  ${BOLD}12)${NC} Exit"
     echo -e ""
-    echo -n "Enter option [1-9]: "
+    echo -n "Enter option [1-12]: "
 }
 
 launch_stack() {
@@ -90,6 +93,21 @@ launch_comfyui() {
     /Users/hassan/local-ai/start_comfyui.sh
 }
 
+launch_aider_cli() {
+    echo -e "\n${BOLD}${BLUE}Launching Aider CLI...${NC}"
+    /Users/hassan/local-ai/start_aider.sh
+}
+
+launch_aider_gui() {
+    echo -e "\n${BOLD}${BLUE}Launching Aider Web GUI...${NC}"
+    /Users/hassan/local-ai/start_aider.sh --gui
+}
+
+launch_letta() {
+    echo -e "\n${BOLD}${BLUE}Launching Letta Server...${NC}"
+    /Users/hassan/local-ai/start_letta.sh
+}
+
 # Main process loop
 if [[ "${1:-}" == "--all" ]]; then
     launch_stack
@@ -109,18 +127,21 @@ while true; do
         4) launch_openhands; break ;;
         5) launch_fooocus; break ;;
         6) launch_comfyui; break ;;
-        7)
+        7) launch_aider_cli; break ;;
+        8) launch_aider_gui; break ;;
+        9) launch_letta; break ;;
+        10)
             launch_stack
             launch_dify
             launch_maxun
             launch_openhands
             break
             ;;
-        8)
+        11)
             /Users/hassan/local-ai/stop_tools.sh
             break
             ;;
-        9)
+        12)
             echo "Exiting."
             exit 0
             ;;

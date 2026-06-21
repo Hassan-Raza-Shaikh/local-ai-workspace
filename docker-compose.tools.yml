@@ -44,7 +44,35 @@ services:
       - LANGFLOW_PORT=7860
     restart: unless-stopped
 
+  letta-db:
+    image: pgvector/pgvector:pg16
+    container_name: letta-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=letta
+      - POSTGRES_USER=letta
+      - POSTGRES_PASSWORD=letta
+    volumes:
+      - letta-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  letta-server:
+    image: letta/letta:latest
+    container_name: letta-server
+    ports:
+      - "8283:8283"
+    environment:
+      - LETTA_PG_URI=postgresql://letta:letta@letta-db:5432/letta
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - /Users/hassan/nltk_data:/root/nltk_data
+    depends_on:
+      - letta-db
+    restart: unless-stopped
+
 volumes:
   open-webui-data:
   n8n-data:
   langflow-data:
+  letta-db-data:

@@ -44,6 +44,8 @@ When active, your local web services are mapped to these URLs:
 | **OpenHands** | http://localhost:3001 | Autonomous software development agent (Devin alternative) | Launcher option `4` |
 | **Fooocus WebUI** | http://localhost:7865 | Offline SDXL image generator (Midjourney alternative) | Launcher option `5` |
 | **ComfyUI WebUI** | http://localhost:8188 | Node-based offline image generator & workflow engine | Launcher option `6` |
+| **Aider Web GUI** | http://localhost:8501 | Streamlit-based collaborative coding interface | Launcher option `8` |
+| **Letta Server** | http://localhost:8283 | Stateful agent server with SQLite database | Launcher option `9` |
 
 ---
 
@@ -125,6 +127,18 @@ Run high-quality text-to-image and image-to-image generation locally using Apple
 
 ### 8. Apple Silicon Hardware Optimizations
 Instead of using Intel-specific `openvino.genai` packages, we leverage native Apple Metal Performance Shaders (MPS) and PyTorch MPS fallbacks in python, and native CoreML runtimes in Ollama to ensure maximum model performance.
+
+### 9. Interactive AI Pair Programmer (`Aider`)
+Aider is a terminal-based and web-based AI pair programmer that lets you write code in local git repositories. It supports Gemini and local Ollama models.
+- **Start CLI**: Select Option `7` in the launcher menu or run `/Users/hassan/local-ai/start_aider.sh`.
+- **Start Web GUI**: Select Option `8` in the launcher menu to start the web-based graphical interface (runs Streamlit on port `8501`).
+- **Configuration**: Automatically picks up your Gemini API key from `/Users/hassan/local-ai/.env`.
+
+### 10. Stateful Agent Server (`Letta`)
+Letta (formerly MemGPT) is a stateful agent server that manages long-term memory and runs autonomous agents locally.
+- **Start Server**: Select Option `9` in the launcher menu or run `/Users/hassan/local-ai/start_letta.sh`.
+- **API Access**: Accessible at `http://localhost:8283`.
+- **Control**: Stop using `./stop_tools.sh` to reclaim CPU/memory.
 
 ---
 

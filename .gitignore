@@ -2,6 +2,7 @@
 
 # Ignored Folders
 data/
+logs/
 .env
 .continue/
 __pycache__/
@@ -26,3 +27,4 @@ hyperframes/
 comfyui/
 openhands_workspace/
 *.whl
+.aider*
