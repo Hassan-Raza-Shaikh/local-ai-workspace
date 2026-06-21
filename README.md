@@ -53,6 +53,7 @@ When activated via the launcher, your local services map to the following addres
 *   📁 **`maxun/`**: Maxun point-and-click web scraper stack.
 *   📁 **`notebooks/`**: Python scripts and agent experiments:
     *   📄 `transcribe.py`: GPU-accelerated speech-to-text transcriber (Whisper).
+    *   📄 `convert_doc.py`: Document to markdown converter (MarkItDown).
     *   📄 `browser_use_demo.py`: Automated web browser agent.
     *   📄 `query_local_data.py`: Central LlamaIndex document RAG script.
     *   📄 `local_crew_agent.py`: Multi-agent research crew (CrewAI).
