@@ -57,11 +57,11 @@ docker compose up -d --build
 # 4. Open dashboard
 echo -e "\n${BOLD}${BLUE}[4/4] Opening Local AI Dashboard...${NC}"
 echo -e "${GREEN}✔ Odysseus UI is starting up!${NC}"
-echo -e "${BOLD}Dashboard URL:${NC} http://localhost:7000"
+echo -e "${BOLD}Dashboard URL:${NC} http://localhost:7070"
 
 # Wait a couple of seconds for container binding
 sleep 3
-open "http://localhost:7000"
+open "http://localhost:7070"
 
 echo -e "\n${BOLD}${GREEN}===========================================${NC}"
 echo -e "${BOLD}${GREEN}   Setup complete! Enjoy your local AI.     ${NC}"
