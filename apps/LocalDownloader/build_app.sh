@@ -48,6 +48,11 @@ chmod +x "$BUILD_DIR/$APP_NAME.app/Contents/MacOS/LocalDownloader"
 # Move the finalized app bundle to /Users/hassan/local-ai
 mv "$BUILD_DIR/$APP_NAME.app" "$OUT_DIR/"
 
+# 5. Clear quarantine attributes and apply ad-hoc code signature
+echo -e "Signing and registers bundle..."
+xattr -cr "$OUT_DIR/$APP_NAME.app"
+codesign --force --deep --sign - "$OUT_DIR/$APP_NAME.app"
+
 # Clean temporary build directory
 rm -rf "$BUILD_DIR"
 
