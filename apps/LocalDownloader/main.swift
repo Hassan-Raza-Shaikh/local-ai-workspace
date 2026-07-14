@@ -335,7 +335,7 @@ struct ContentView: View {
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 10)
-                .background(Color(NSColor.controlBackgroundColor))
+                .background(.thinMaterial)
                 .cornerRadius(6)
             }
             
@@ -363,7 +363,7 @@ struct ContentView: View {
                 }
             }
             .padding(10)
-            .background(Color(NSColor.windowBackgroundColor))
+            .background(.thinMaterial)
             .cornerRadius(6)
             
             // Advanced Custom Settings
@@ -504,6 +504,7 @@ struct ContentView: View {
         }
         .padding(20)
         .frame(width: 480)
+        .background(.ultraThinMaterial)
     }
     
     private func selectFolder() {

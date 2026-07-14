@@ -45,6 +45,12 @@ echo -e "[4/4] Finalizing bundle assets..."
 cp "$SRC_DIR/Info.plist" "$BUILD_DIR/$APP_NAME.app/Contents/Info.plist"
 chmod +x "$BUILD_DIR/$APP_NAME.app/Contents/MacOS/LocalDownloader"
 
+# Copy AppIcon.icns if available in source directory
+if [ -f "$SRC_DIR/AppIcon.icns" ]; then
+    echo -e "Copying custom application icon..."
+    cp "$SRC_DIR/AppIcon.icns" "$BUILD_DIR/$APP_NAME.app/Contents/Resources/AppIcon.icns"
+fi
+
 # Move the finalized app bundle to /Users/hassan/local-ai
 mv "$BUILD_DIR/$APP_NAME.app" "$OUT_DIR/"
 
