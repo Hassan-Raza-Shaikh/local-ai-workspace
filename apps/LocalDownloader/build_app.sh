@@ -35,6 +35,7 @@ echo -e "[3/4] Compiling main.swift with swiftc..."
 SDK_PATH=$(xcrun --show-sdk-path --sdk macosx)
 
 swiftc -O \
+    -target arm64-apple-macosx14.0 \
     -parse-as-library \
     -sdk "$SDK_PATH" \
     "$SRC_DIR/main.swift" \
