@@ -8,10 +8,23 @@ struct LocalDownloaderApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 480, minHeight: 460)
+                .frame(minWidth: 480, maxWidth: .infinity, minHeight: 460, maxHeight: .infinity)
         }
         .windowStyle(.hiddenTitleBar)
     }
+}
+
+// MARK: - Native macOS Translucent Glass Background
+struct VisualEffectView: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.blendingMode = .behindWindow
+        view.state = .active
+        view.material = .underWindowBackground // Refracts desktop background (macOS 27 Liquid Glass style)
+        return view
+    }
+    
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
 }
 
 // MARK: - Downloader State & Execution Engine
@@ -277,234 +290,242 @@ struct ContentView: View {
     @State private var showLogs: Bool = false
     
     var body: some View {
-        VStack(spacing: 16) {
-            // Title Header
-            HStack(spacing: 10) {
-                Image(systemName: "arrow.down.circle.fill")
-                    .font(.system(size: 32))
-                    .foregroundColor(.blue)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Local Video Downloader")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                    Text("Powered by yt-dlp")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-            }
-            .padding(.bottom, 6)
+        ZStack {
+            // Refractive Glass Background covering the entire window
+            VisualEffectView()
+                .ignoresSafeArea()
             
-            // URL Input Section
-            VStack(alignment: .leading, spacing: 5) {
-                Text("Video URL or Playlist Link")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                TextField("https://www.youtube.com/watch?v=...", text: $url)
-                    .textFieldStyle(.roundedBorder)
-                    .disabled(downloader.isDownloading)
-            }
-            
-            // Mode Select Segment
-            Picker("Format", selection: $isAudioOnly) {
-                Text("Video (MP4)").tag(false)
-                Text("Audio (MP3)").tag(true)
-            }
-            .pickerStyle(.segmented)
-            .disabled(downloader.isDownloading)
-            
-            // Destination Directory Box
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Save Destination")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                HStack(spacing: 12) {
-                    Image(systemName: "folder.fill")
-                        .foregroundColor(.orange)
-                    Text(outputFolder)
-                        .font(.body)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                    Spacer()
-                    Button("Select...") {
-                        selectFolder()
-                    }
-                    .disabled(downloader.isDownloading)
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 10)
-                .background(.thinMaterial)
-                .cornerRadius(6)
-            }
-            
-            // Basic Options grid
-            VStack(spacing: 10) {
-                HStack {
-                    Text("Maximum Resolution")
-                    Spacer()
-                    Picker("", selection: $maxResolution) {
-                        Text("Best Quality").tag("Best")
-                        Text("1080p (Full HD)").tag("1080p")
-                        Text("720p (HD)").tag("720p")
-                        Text("480p (SD)").tag("480p")
-                    }
-                    .frame(width: 160)
-                    .disabled(downloader.isDownloading || isAudioOnly)
-                }
-                
-                HStack {
-                    Text("Download & Embed Subtitles")
-                    Spacer()
-                    Toggle("", isOn: $downloadSubs)
-                        .toggleStyle(.checkbox)
-                        .disabled(downloader.isDownloading || isAudioOnly)
-                }
-            }
-            .padding(10)
-            .background(.thinMaterial)
-            .cornerRadius(6)
-            
-            // Advanced Custom Settings
-            DisclosureGroup("Advanced Settings") {
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Extract Cookies From:")
-                            .font(.body)
-                        Spacer()
-                        Picker("", selection: $browserCookies) {
-                            Text("None").tag("None")
-                            Text("Chrome").tag("Chrome")
-                            Text("Safari").tag("Safari")
-                            Text("Firefox").tag("Firefox")
-                            Text("Brave").tag("Brave")
+            ScrollView(.vertical, showsIndicators: true) {
+                VStack(spacing: 16) {
+                    // Title Header
+                    HStack(spacing: 10) {
+                        Image(systemName: "arrow.down.circle.fill")
+                            .font(.system(size: 32))
+                            .foregroundColor(.blue)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Local Video Downloader")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                            Text("Powered by yt-dlp")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
-                        .frame(width: 160)
-                        .disabled(downloader.isDownloading)
+                        Spacer()
                     }
+                    .padding(.bottom, 6)
                     
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Custom CLI Flags")
+                    // URL Input Section
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Video URL or Playlist Link")
                             .font(.caption)
+                            .fontWeight(.semibold)
                             .foregroundColor(.secondary)
-                        TextField("e.g. --playlist-start 2 --limit-rate 1M", text: $customArgs)
+                        TextField("https://www.youtube.com/watch?v=...", text: $url)
                             .textFieldStyle(.roundedBorder)
                             .disabled(downloader.isDownloading)
                     }
                     
-                    Button(action: {
-                        downloader.upgradeYtdlp()
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.up.circle")
-                            Text("Upgrade Downloader Engine (yt-dlp)")
-                        }
+                    // Mode Select Segment
+                    Picker("Format", selection: $isAudioOnly) {
+                        Text("Video (MP4)").tag(false)
+                        Text("Audio (MP3)").tag(true)
                     }
+                    .pickerStyle(.segmented)
                     .disabled(downloader.isDownloading)
-                    .buttonStyle(.bordered)
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 4)
-            }
-            
-            // Progress Bar Area
-            if downloader.isDownloading || downloader.progress > 0 {
-                VStack(spacing: 6) {
-                    ProgressView(value: downloader.progress)
-                        .progressViewStyle(.linear)
                     
-                    HStack {
-                        Text(downloader.statusMessage)
+                    // Destination Directory Box
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Save Destination")
                             .font(.caption)
-                            .fontWeight(.medium)
-                        Spacer()
-                        if downloader.isDownloading && !downloader.speed.isEmpty {
-                            Text("\(downloader.speed) • \(downloader.size) • ETA \(downloader.eta)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.secondary)
+                        HStack(spacing: 12) {
+                            Image(systemName: "folder.fill")
+                                .foregroundColor(.orange)
+                            Text(outputFolder)
+                                .font(.body)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Spacer()
+                            Button("Select...") {
+                                selectFolder()
+                            }
+                            .disabled(downloader.isDownloading)
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 10)
+                        .background(.thinMaterial)
+                        .cornerRadius(6)
+                    }
+                    
+                    // Basic Options grid
+                    VStack(spacing: 10) {
+                        HStack {
+                            Text("Maximum Resolution")
+                            Spacer()
+                            Picker("", selection: $maxResolution) {
+                                Text("Best Quality").tag("Best")
+                                Text("1080p (Full HD)").tag("1080p")
+                                Text("720p (HD)").tag("720p")
+                                Text("480p (SD)").tag("480p")
+                            }
+                            .frame(width: 160)
+                            .disabled(downloader.isDownloading || isAudioOnly)
+                        }
+                        
+                        HStack {
+                            Text("Download & Embed Subtitles")
+                            Spacer()
+                            Toggle("", isOn: $downloadSubs)
+                                .toggleStyle(.checkbox)
+                                .disabled(downloader.isDownloading || isAudioOnly)
                         }
                     }
-                }
-                .padding(.top, 4)
-            }
-            
-            // Primary Execute / Terminate Row
-            HStack {
-                if downloader.isDownloading {
+                    .padding(10)
+                    .background(.thinMaterial)
+                    .cornerRadius(6)
+                    
+                    // Advanced Custom Settings
+                    DisclosureGroup("Advanced Settings") {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text("Extract Cookies From:")
+                                    .font(.body)
+                                Spacer()
+                                Picker("", selection: $browserCookies) {
+                                    Text("None").tag("None")
+                                    Text("Chrome").tag("Chrome")
+                                    Text("Safari").tag("Safari")
+                                    Text("Firefox").tag("Firefox")
+                                    Text("Brave").tag("Brave")
+                                }
+                                .frame(width: 160)
+                                .disabled(downloader.isDownloading)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Custom CLI Flags")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                TextField("e.g. --playlist-start 2 --limit-rate 1M", text: $customArgs)
+                                    .textFieldStyle(.roundedBorder)
+                                    .disabled(downloader.isDownloading)
+                            }
+                            
+                            Button(action: {
+                                downloader.upgradeYtdlp()
+                            }) {
+                                HStack {
+                                    Image(systemName: "arrow.up.circle")
+                                    Text("Upgrade Downloader Engine (yt-dlp)")
+                                }
+                            }
+                            .disabled(downloader.isDownloading)
+                            .buttonStyle(.bordered)
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 4)
+                    }
+                    
+                    // Progress Bar Area
+                    if downloader.isDownloading || downloader.progress > 0 {
+                        VStack(spacing: 6) {
+                            ProgressView(value: downloader.progress)
+                                .progressViewStyle(.linear)
+                            
+                            HStack {
+                                Text(downloader.statusMessage)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                Spacer()
+                                if downloader.isDownloading && !downloader.speed.isEmpty {
+                                    Text("\(downloader.speed) • \(downloader.size) • ETA \(downloader.eta)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                        .padding(.top, 4)
+                    }
+                    
+                    // Primary Execute / Terminate Row
+                    HStack {
+                        if downloader.isDownloading {
+                            Button(action: {
+                                downloader.cancelDownload()
+                            }) {
+                                HStack {
+                                    Image(systemName: "stop.circle.fill")
+                                    Text("Cancel Download")
+                                        .fontWeight(.semibold)
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 32)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.red)
+                        } else {
+                            Button(action: {
+                                downloader.startDownload(
+                                    url: url,
+                                    isAudioOnly: isAudioOnly,
+                                    outputFolder: outputFolder,
+                                    maxResolution: maxResolution,
+                                    downloadSubs: downloadSubs,
+                                    browserCookies: browserCookies,
+                                    customArgs: customArgs
+                                )
+                            }) {
+                                HStack {
+                                    Image(systemName: "arrow.down.circle.fill")
+                                    Text("Start Download")
+                                        .fontWeight(.semibold)
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 32)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        }
+                    }
+                    
+                    // Drawer to expand logs
+                    Divider()
                     Button(action: {
-                        downloader.cancelDownload()
+                        withAnimation {
+                            showLogs.toggle()
+                        }
                     }) {
                         HStack {
-                            Image(systemName: "stop.circle.fill")
-                            Text("Cancel Download")
-                                .fontWeight(.semibold)
+                            Text(showLogs ? "Hide Diagnostics Console" : "Show Diagnostics Console")
+                            Image(systemName: showLogs ? "chevron.up" : "chevron.down")
                         }
-                        .frame(maxWidth: .infinity, minHeight: 32)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.red)
-                } else {
-                    Button(action: {
-                        downloader.startDownload(
-                            url: url,
-                            isAudioOnly: isAudioOnly,
-                            outputFolder: outputFolder,
-                            maxResolution: maxResolution,
-                            downloadSubs: downloadSubs,
-                            browserCookies: browserCookies,
-                            customArgs: customArgs
-                        )
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.down.circle.fill")
-                            Text("Start Download")
-                                .fontWeight(.semibold)
+                    .buttonStyle(.plain)
+                    
+                    if showLogs {
+                        ScrollViewReader { proxy in
+                            ScrollView {
+                                Text(downloader.logOutput)
+                                    .font(.system(.caption, design: .monospaced))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(8)
+                                    .background(Color(NSColor.textBackgroundColor).opacity(0.5))
+                                    .cornerRadius(4)
+                                    .id("logText")
+                            }
+                            .frame(maxHeight: 120)
+                            .onChange(of: downloader.logOutput) { _ in
+                                proxy.scrollTo("logText", anchor: .bottom)
+                            }
                         }
-                        .frame(maxWidth: .infinity, minHeight: 32)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-            }
-            
-            // Drawer to expand logs
-            Divider()
-            Button(action: {
-                withAnimation {
-                    showLogs.toggle()
-                }
-            }) {
-                HStack {
-                    Text(showLogs ? "Hide Diagnostics Console" : "Show Diagnostics Console")
-                    Image(systemName: showLogs ? "chevron.up" : "chevron.down")
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
-            }
-            .buttonStyle(.plain)
-            
-            if showLogs {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        Text(downloader.logOutput)
-                            .font(.system(.caption, design: .monospaced))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(8)
-                            .background(Color(NSColor.textBackgroundColor))
-                            .cornerRadius(4)
-                            .id("logText")
-                    }
-                    .frame(maxHeight: 120)
-                    .onChange(of: downloader.logOutput) { _ in
-                        proxy.scrollTo("logText", anchor: .bottom)
                     }
                 }
+                .padding(20)
+                .frame(maxWidth: .infinity)
             }
         }
-        .padding(20)
-        .frame(width: 480)
-        .background(.ultraThinMaterial)
+        .frame(minWidth: 480, maxWidth: .infinity, minHeight: 460, maxHeight: .infinity)
     }
     
     private func selectFolder() {
