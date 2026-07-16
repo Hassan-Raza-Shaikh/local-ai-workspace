@@ -5,8 +5,8 @@
 set -e
 
 # App configuration parameters
-APP_NAME="MediaStudio"
-SRC_DIR="/Users/hassan/local-ai/apps/MediaStudio"
+APP_NAME="Media Studio"
+SRC_DIR="/Users/hassan/local-ai/apps/Media Studio"
 OUT_DIR="/Users/hassan/local-ai"
 BUILD_DIR="$SRC_DIR/build_temp"
 

@@ -435,7 +435,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 // Window drag area and custom title tab control
                 HStack(spacing: 12) {
-                    Text("MediaStudio")
+                    Text("Media Studio")
                         .font(.headline)
                         .fontWeight(.bold)
                         .padding(.leading, 20)
@@ -1237,7 +1237,7 @@ struct ScraperView: View {
         
         runner.runScript(
             executable: "/opt/miniconda3/bin/python",
-            arguments: ["/Users/hassan/local-ai/apps/MediaStudio/crawl_site.py", scrapeUrl, outputFilePath],
+            arguments: ["/Users/hassan/local-ai/apps/Media Studio/crawl_site.py", scrapeUrl, outputFilePath],
             targetResultFile: outputFilePath
         )
     }
