@@ -53,16 +53,7 @@ All compiled binaries are located in the root of the workspace directory: `/User
     *   **Browser-Use**: Visual prompt agent that spawns a visible Playwright browser window to execute web search instructions.
     *   **Auto-Teardown**: Automatically stops the `openhands-app` container when the app is closed.
 
-### 4. 💬 Local Chat
-*   **Bundle Identifier**: `com.localai.localchat`
-*   **Icon**: `icns/Local Chat.icns`
-*   **Purpose**: Direct streaming client for Ollama LLM models.
-*   **Key Features**:
-    *   **API Streaming**: Communicates directly with `/api/chat` using asynchronous byte streams, displaying LLM tokens word-by-word into chat bubbles.
-    *   **Ollama Manager**: Dynamically fetches locally installed models, allows model deletion with one click, and pulls new models from the Ollama library showing active download progress bars.
-    *   **Service Toggle**: Start/Stop the local Ollama background server daemon.
-
-### 5. 🎨 Creative Studio
+### 4. 🎨 Creative Studio
 *   **Bundle Identifier**: `com.localai.creativestudio`
 *   **Icon**: `icns/Creative Studio.icns`
 *   **Purpose**: GPU-accelerated local Stable Diffusion / Flux art creation.
@@ -71,7 +62,7 @@ All compiled binaries are located in the root of the workspace directory: `/User
     *   **Fooocus Art Workspace**: One-click launcher for the Fooocus backend (port `7865`) with Gradio interfaces.
     *   **Auto-Teardown**: Forcefully kills background python instances (`pkill`) immediately on exit to release your GPU memory.
 
-### 6. 🧩 AI Orchestrator
+### 5. 🧩 AI Orchestrator
 *   **Bundle Identifier**: `com.localai.aiorchestrator`
 *   **Icon**: `icns/AI Orchestrator.icns`
 *   **Purpose**: Central container manager and service workspace dashboard.
@@ -95,7 +86,7 @@ Each application folder inside `apps/` contains a `build_app.sh` script.
 ### Bulk Recompilation
 To compile the entire suite at once, navigate to the root directory and run:
 ```bash
-for app in "Media Studio" "Dev Assistant" "Local Chat" "Creative Studio" "AI Orchestrator" "Odysseus"; do
+for app in "Media Studio" "Dev Assistant" "Creative Studio" "AI Orchestrator" "Odysseus"; do
   "./apps/$app/build_app.sh"
 done
 ```

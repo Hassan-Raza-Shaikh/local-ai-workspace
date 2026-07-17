@@ -2,7 +2,7 @@
 
 Welcome to the **Local AI Workspace Hub**, a unified workspace designed to orchestrate local AI engineering pipelines, visual automation workflows, stateful multi-agent coding, and GPU-accelerated document processing on consumer hardware.
 
-This repository features a suite of **6 native macOS SwiftUI desktop applications** built with the macOS 27 Golden Gate Liquid Glass 2.0 design framework. These apps manage background service daemons (Docker, Python backends, Ollama APIs) on-demand and perform automatic resources teardown upon application closure.
+This repository features a suite of **5 native macOS SwiftUI desktop applications** built with the macOS 27 Golden Gate Liquid Glass 2.0 design framework. These apps manage background service daemons (Docker, Python backends, Ollama APIs) on-demand and perform automatic resources teardown upon application closure.
 
 ---
 
@@ -25,13 +25,10 @@ The suite of desktop apps is compiled and located in your root workspace. They u
 3.  💻 **`Dev Assistant.app`** (Autonomous Pair Programming)
     *   *Port*: `3001` (OpenHands), `8501` (Aider GUI)
     *   *Features*: Aider chat bubble window, OpenHands container controller + embedded sandbox web workspace, and a prompt field to run browser-use visual agents. Auto-stops OpenHands docker container on termination.
-4.  💬 **`Local Chat.app`** (Direct Ollama Interface)
-    *   *Port*: `11434`
-    *   *Features*: Streaming token parser for Ollama `/api/chat`, installed model list, model puller with progress bar downloads, model deletions, and server toggles.
-5.  🎨 **`Creative Studio.app`** (Visual AI Art Canvas)
+4.  🎨 **`Creative Studio.app`** (Visual AI Art Canvas)
     *   *Port*: `8188` (ComfyUI), `7865` (Fooocus)
     *   *Features*: Starts/stops local ComfyUI and Fooocus python services (configuring Apple Silicon MPS parameters). Auto-kills backend servers on exit.
-6.  🧩 **`AI Orchestrator.app`** (Container Workspace Portal)
+5.  🧩 **`AI Orchestrator.app`** (Container Workspace Portal)
     *   *Port*: `3000` (Open WebUI), `8082` (Stirling-PDF), `5678` (n8n), `7860` (Langflow), `8090` (Dify), `8086` (Maxun)
     *   *Features*: Central dashboard to spin up/tear down compose stacks. Mounts tabbed borderless web views of all tools. Auto-shuts down all docker compose services on quit.
 
@@ -60,7 +57,7 @@ When active, your local services map to the following addresses:
 
 ## 📂 Project Directory Map
 
-*   📁 **`apps/`**: Source files and build scripts for the 6 SwiftUI applications.
+*   📁 **`apps/`**: Source files and build scripts for the 5 SwiftUI applications.
 *   📁 **`comfyui/`**: Advanced ComfyUI image generator repository.
 *   📁 **`data/`**: Drop private PDFs, CSVs, or text files here for RAG indexing.
 *   📁 **`dify/`**: Dify application platform Docker Compose stack.
