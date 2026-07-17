@@ -3,9 +3,22 @@ import Foundation
 import AppKit
 import WebKit
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillTerminate(_ notification: Notification) {
+        // Terminate OpenHands Docker container if active
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
+        process.arguments = ["stop", "openhands-app"]
+        try? process.run()
+        process.waitUntilExit()
+    }
+}
+
 // MARK: - App Entrypoint
 @main
 struct DevAssistantApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
