@@ -3,9 +3,22 @@ import Foundation
 import AppKit
 import WebKit
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillTerminate(_ notification: Notification) {
+        // Stop Odysseus Compose Stack
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
+        process.arguments = ["compose", "-f", "/Users/hassan/local-ai/odysseus/docker-compose.yml", "down"]
+        try? process.run()
+        process.waitUntilExit()
+    }
+}
+
 // MARK: - App Entrypoint
 @main
 struct OdysseusApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
