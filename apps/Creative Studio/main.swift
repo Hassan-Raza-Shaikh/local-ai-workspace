@@ -3,6 +3,84 @@ import Foundation
 import AppKit
 import WebKit
 
+// MARK: - macOS 27 Liquid Glass Style System
+struct LiquidGlassButtonStyle: ButtonStyle {
+    @State private var isHovered = false
+    var isProminent: Bool = false
+    var accentColor: Color = .blue
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.vertical, 6)
+            .padding(.horizontal, 12)
+            .font(.system(.body, design: .rounded))
+            .fontWeight(.semibold)
+            .foregroundColor(isProminent ? .white : .primary)
+            .background(
+                ZStack {
+                    if isProminent {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(LinearGradient(
+                                colors: [accentColor.opacity(0.85), accentColor],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                    } else {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(.ultraThinMaterial)
+                            .opacity(configuration.isPressed ? 0.75 : (isHovered ? 0.95 : 0.85))
+                    }
+                }
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.15), Color.black.opacity(0.2)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+            )
+            .scaleEffect(configuration.isPressed ? 0.96 : (isHovered ? 1.02 : 1.0))
+            .shadow(color: Color.black.opacity(isHovered ? 0.12 : 0.05), radius: isHovered ? 4 : 2, x: 0, y: 1)
+            .animation(.spring(response: 0.25, dampingFraction: 0.65, blendDuration: 0), value: isHovered)
+            .animation(.spring(response: 0.25, dampingFraction: 0.65, blendDuration: 0), value: configuration.isPressed)
+            .onHover { hover in
+                isHovered = hover
+            }
+    }
+}
+
+struct LiquidGlassModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(.ultraThinMaterial)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.12), Color.black.opacity(0.15)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+            )
+            .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 3)
+    }
+}
+
+extension View {
+    func liquidGlassCard() -> some View {
+        self.modifier(LiquidGlassModifier())
+    }
+}
+
+
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         // Terminate ComfyUI background server
@@ -282,8 +360,7 @@ struct StudioWorkspaceView: View {
                 }) {
                     Text(manager.isRunning ? "Stop Server" : "Start Server")
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(manager.isRunning ? .red : .blue)
+                .buttonStyle(LiquidGlassButtonStyle(isProminent: true, accentColor: manager.isRunning ? .red : .blue))
             }
             .padding(.horizontal, 16)
             .padding(.top, 12)
