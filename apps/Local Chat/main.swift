@@ -375,7 +375,7 @@ class ChatManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
             var processEnv = ProcessInfo.processInfo.environment
-            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
             process.arguments = ["-a", "Ollama"]
@@ -392,7 +392,7 @@ class ChatManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
             var processEnv = ProcessInfo.processInfo.environment
-            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: "/usr/bin/killall")
             process.arguments = ["Ollama"]
@@ -409,7 +409,7 @@ class ChatManager: ObservableObject {
     private func checkOllamaStatus() {
         let process = Process()
         var processEnv = ProcessInfo.processInfo.environment
-        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/bin/pgrep")
         process.arguments = ["-x", "Ollama"]
@@ -437,7 +437,7 @@ class ChatManager: ObservableObject {
         // Query CPU Usage
         let cpuProcess = Process()
         var cpuProcessEnv = ProcessInfo.processInfo.environment
-        cpuProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        cpuProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         cpuProcess.environment = cpuProcessEnv
         cpuProcess.executableURL = URL(fileURLWithPath: "/usr/bin/top")
         cpuProcess.arguments = ["-l", "1", "-n", "0"]
@@ -465,7 +465,7 @@ class ChatManager: ObservableObject {
         // Query Memory Usage (Free RAM)
         let memProcess = Process()
         var memProcessEnv = ProcessInfo.processInfo.environment
-        memProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        memProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         memProcess.environment = memProcessEnv
         memProcess.executableURL = URL(fileURLWithPath: "/usr/bin/vm_stat")
         let memPipe = Pipe()
@@ -500,7 +500,7 @@ class ChatManager: ObservableObject {
         // Check Odysseus Container state
         let docProcess = Process()
         var docProcessEnv = ProcessInfo.processInfo.environment
-        docProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        docProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         docProcess.environment = docProcessEnv
         docProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         docProcess.arguments = ["ps", "-a", "--filter", "name=odysseus-app", "--format", "{{.State}}"]

@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Stop Core Tools Compose Stack
         let coreProcess = Process()
         var coreProcessEnv = ProcessInfo.processInfo.environment
-        coreProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        coreProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         coreProcess.environment = coreProcessEnv
         coreProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         coreProcess.arguments = ["compose", "-f", "/Users/hassan/local-ai/docker-compose.tools.yml", "down"]
@@ -96,7 +96,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Stop Dify Compose Stack
         let difyProcess = Process()
         var difyProcessEnv = ProcessInfo.processInfo.environment
-        difyProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        difyProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         difyProcess.environment = difyProcessEnv
         difyProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         difyProcess.arguments = ["compose", "-f", "/Users/hassan/local-ai/dify/docker/docker-compose.yaml", "down"]
@@ -106,7 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Stop Maxun Compose Stack
         let maxunProcess = Process()
         var maxunProcessEnv = ProcessInfo.processInfo.environment
-        maxunProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        maxunProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         maxunProcess.environment = maxunProcessEnv
         maxunProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         maxunProcess.arguments = ["compose", "-f", "/Users/hassan/local-ai/maxun/docker-compose.yml", "down"]
@@ -116,7 +116,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Stop Letta Agent containers
         let lettaProcess = Process()
         var lettaProcessEnv = ProcessInfo.processInfo.environment
-        lettaProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        lettaProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         lettaProcess.environment = lettaProcessEnv
         lettaProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         lettaProcess.arguments = ["stop", "letta-server", "letta-db"]
@@ -197,7 +197,7 @@ class StackManager: ObservableObject {
     func checkStatus() {
         let process = Process()
         var processEnv = ProcessInfo.processInfo.environment
-        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         process.arguments = ["ps", "-a", "--filter", "name=\(containerName)", "--format", "{{.State}}"]
@@ -232,7 +232,7 @@ class StackManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
             var processEnv = ProcessInfo.processInfo.environment
-            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: self.startExecutable)
             process.arguments = self.startArgs
@@ -281,7 +281,7 @@ class StackManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
             var processEnv = ProcessInfo.processInfo.environment
-            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: self.stopExecutable)
             process.arguments = self.stopArgs

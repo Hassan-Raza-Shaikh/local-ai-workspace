@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Stop Odysseus Compose Stack
         let process = Process()
         var processEnv = ProcessInfo.processInfo.environment
-        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         process.arguments = ["compose", "-f", "/Users/hassan/local-ai/odysseus/docker-compose.yml", "down"]
@@ -165,7 +165,7 @@ class WorkspaceManager: ObservableObject {
     func checkStatus() {
         let process = Process()
         var processEnv = ProcessInfo.processInfo.environment
-        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         process.arguments = ["ps", "-a", "--filter", "name=odysseus-app", "--format", "{{.State}}"]
@@ -203,7 +203,7 @@ class WorkspaceManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
             var processEnv = ProcessInfo.processInfo.environment
-            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             process.environment = processEnv
             self.process = process
             process.executableURL = URL(fileURLWithPath: "/bin/bash")
@@ -212,7 +212,7 @@ class WorkspaceManager: ObservableObject {
             
             // Set headless environment to prevent popping open default browser window
             var env = ProcessInfo.processInfo.environment
-            env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             env["HEADLESS"] = "1"
             process.environment = env
             
@@ -270,7 +270,7 @@ class WorkspaceManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
             var processEnv = ProcessInfo.processInfo.environment
-            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
             process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
             process.arguments = ["compose", "-f", "/Users/hassan/local-ai/odysseus/docker-compose.yml", "down"]
@@ -322,7 +322,7 @@ class WorkspaceManager: ObservableObject {
         // Query CPU Usage
         let cpuProcess = Process()
         var cpuProcessEnv = ProcessInfo.processInfo.environment
-        cpuProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        cpuProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         cpuProcess.environment = cpuProcessEnv
         cpuProcess.executableURL = URL(fileURLWithPath: "/usr/bin/top")
         cpuProcess.arguments = ["-l", "1", "-n", "0"]
@@ -350,7 +350,7 @@ class WorkspaceManager: ObservableObject {
         // Query Free RAM
         let memProcess = Process()
         var memProcessEnv = ProcessInfo.processInfo.environment
-        memProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        memProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/miniconda3/bin"
         memProcess.environment = memProcessEnv
         memProcess.executableURL = URL(fileURLWithPath: "/usr/bin/vm_stat")
         let memPipe = Pipe()
