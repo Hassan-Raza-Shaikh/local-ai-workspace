@@ -3,9 +3,29 @@ import Foundation
 import AppKit
 import WebKit
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillTerminate(_ notification: Notification) {
+        // Terminate ComfyUI background server
+        let comfyProcess = Process()
+        comfyProcess.executableURL = URL(fileURLWithPath: "/usr/bin/pkill")
+        comfyProcess.arguments = ["-f", "comfyui.*main.py"]
+        try? comfyProcess.run()
+        comfyProcess.waitUntilExit()
+        
+        // Terminate Fooocus background server
+        let fooocusProcess = Process()
+        fooocusProcess.executableURL = URL(fileURLWithPath: "/usr/bin/pkill")
+        fooocusProcess.arguments = ["-f", "fooocus.*entry_with_update.py"]
+        try? fooocusProcess.run()
+        fooocusProcess.waitUntilExit()
+    }
+}
+
 // MARK: - App Entrypoint
 @main
 struct CreativeStudioApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
