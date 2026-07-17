@@ -384,31 +384,93 @@ class WorkspaceManager: ObservableObject {
 }
 
 // MARK: - Presentation Layer (ContentView)
+struct SidebarItem: Identifiable {
+    let id: Int
+    let title: String
+    let icon: String
+    let color: Color
+}
+
+// MARK: - Presentation Layer (ContentView)
 struct ContentView: View {
     @StateObject private var workspace = WorkspaceManager()
-    @State private var showLogs = false
+    @State private var selectedTab = 0
+    
+    let sidebarItems = [
+        SidebarItem(id: 0, title: "Search Portal", icon: "safari.fill", color: .blue),
+        SidebarItem(id: 1, title: "Console Logs", icon: "terminal.fill", color: .gray)
+    ]
     
     var body: some View {
         ZStack {
             VisualEffectView()
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                // Title and System HUD Bar
-                HStack(spacing: 20) {
+            HStack(spacing: 0) {
+                // Left Navigation Sidebar
+                VStack(spacing: 8) {
                     HStack(spacing: 8) {
                         Image(systemName: "safari.fill")
                             .font(.title2)
                             .foregroundColor(.blue)
                         Text("Odysseus")
-                            .font(.title3)
+                            .font(.system(.headline, design: .rounded))
                             .fontWeight(.bold)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                    
+                    ScrollView {
+                        VStack(spacing: 4) {
+                            ForEach(sidebarItems) { item in
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                        selectedTab = item.id
+                                    }
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: item.icon)
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(selectedTab == item.id ? .white : item.color)
+                                            .frame(width: 24, height: 24)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .fill(selectedTab == item.id ? Color.white.opacity(0.15) : item.color.opacity(0.12))
+                                            )
+                                        Text(item.title)
+                                            .font(.system(.body, design: .rounded))
+                                            .fontWeight(selectedTab == item.id ? .semibold : .medium)
+                                            .foregroundColor(selectedTab == item.id ? .white : .primary)
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(selectedTab == item.id ? item.color : Color.clear)
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 12)
                     }
                     
                     Spacer()
-                    
-                    // Hardware gauges inside header
+                }
+                .frame(width: 200)
+                .background(.ultraThinMaterial.opacity(0.85))
+                
+                Divider()
+                
+                // Right Detail Area
+                VStack(spacing: 0) {
+                    // System HUD Bar at the top of detail area
                     HStack(spacing: 16) {
+                        Spacer()
+                        
                         HStack(spacing: 4) {
                             Image(systemName: "cpu")
                             Text("CPU: \(workspace.cpuUsage)")
@@ -430,87 +492,70 @@ struct ContentView: View {
                         .padding(.horizontal, 8)
                         .background(.thinMaterial)
                         .cornerRadius(6)
+                        
+                        Button(action: {
+                            if workspace.isRunning {
+                                workspace.stopWorkspace()
+                            } else {
+                                workspace.startWorkspace()
+                            }
+                        }) {
+                            Text(workspace.isRunning ? "Stop Workspace" : "Start Workspace")
+                        }
+                        .buttonStyle(LiquidGlassButtonStyle(isProminent: true, accentColor: workspace.isRunning ? .red : .blue))
                     }
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 20)
+                    .background(Color.primary.opacity(0.04))
                     
-                    // Server start/stop button
-                    Button(action: {
-                        if workspace.isRunning {
-                            workspace.stopWorkspace()
+                    Divider()
+                    
+                    if selectedTab == 0 {
+                        // Core Web Interface Panel
+                        if workspace.showWebView {
+                            WebView(url: URL(string: "http://localhost:7070")!)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                .padding(12)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                         } else {
-                            workspace.startWorkspace()
+                            VStack(spacing: 12) {
+                                Spacer()
+                                Image(systemName: "safari.fill")
+                                    .font(.system(size: 64))
+                                    .foregroundColor(.secondary.opacity(0.6))
+                                Text("Odysseus Workspace is Offline")
+                                    .font(.headline)
+                                Text("Click 'Start Workspace' to launch Docker compose search containers and Ollama APIs. Once online, the dashboard chat will render here.")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: 420)
+                                Spacer()
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
-                    }) {
-                        Text(workspace.isRunning ? "Stop Workspace" : "Start Workspace")
-                    }
-                    .buttonStyle(LiquidGlassButtonStyle(isProminent: true, accentColor: workspace.isRunning ? .red : .blue))
-                }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 20)
-                .background(Color.primary.opacity(0.04))
-                
-                Divider()
-                
-                // Core Web Interface Panel
-                if workspace.showWebView {
-                    WebView(url: URL(string: "http://localhost:7070")!)
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        .padding(12)
+                    } else {
+                        // Console Logs view
+                        ScrollViewReader { proxy in
+                            ScrollView {
+                                Text(workspace.consoleLogs)
+                                    .font(.system(.caption, design: .monospaced))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(12)
+                                    .background(Color(NSColor.textBackgroundColor).opacity(0.3))
+                                    .cornerRadius(8)
+                                    .id("logText")
+                            }
+                            .onChange(of: workspace.consoleLogs) { _ in
+                                proxy.scrollTo("logText", anchor: .bottom)
+                            }
+                            .padding(20)
+                        }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    VStack(spacing: 12) {
-                        Spacer()
-                        Image(systemName: "safari.fill")
-                            .font(.system(size: 64))
-                            .foregroundColor(.secondary.opacity(0.6))
-                        Text("Odysseus Workspace is Offline")
-                            .font(.headline)
-                        Text("Click 'Start Workspace' to launch Docker compose search containers and Ollama APIs. Once online, the dashboard chat will render here.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: 420)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                
-                // Logs Console Drawer
-                Divider()
-                Button(action: {
-                    withAnimation {
-                        showLogs.toggle()
-                    }
-                }) {
-                    HStack {
-                        Text(showLogs ? "Hide Setup Console Logs" : "Show Setup Console Logs")
-                        Image(systemName: showLogs ? "chevron.up" : "chevron.down")
-                    }
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                }
-                .buttonStyle(.plain)
-                .padding(.vertical, 6)
-                
-                if showLogs {
-                    ScrollViewReader { proxy in
-                        ScrollView {
-                            Text(workspace.consoleLogs)
-                                .font(.system(.caption, design: .monospaced))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(8)
-                                .background(Color(NSColor.textBackgroundColor).opacity(0.3))
-                                .cornerRadius(4)
-                                .id("logText")
-                        }
-                        .frame(maxHeight: 110)
-                        .onChange(of: workspace.consoleLogs) { _ in
-                            proxy.scrollTo("logText", anchor: .bottom)
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 10)
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }

@@ -324,6 +324,14 @@ class StackManager: ObservableObject {
 }
 
 // MARK: - Presentation Layer (ContentView)
+struct SidebarItem: Identifiable {
+    let id: Int
+    let title: String
+    let icon: String
+    let color: Color
+}
+
+// MARK: - Presentation Layer (ContentView)
 struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showLogs = false
@@ -369,55 +377,100 @@ struct ContentView: View {
         container: "letta-server"
     )
     
+    let sidebarItems = [
+        SidebarItem(id: 0, title: "Dashboard", icon: "square.grid.2x2.fill", color: .gray),
+        SidebarItem(id: 1, title: "Open WebUI", icon: "message.fill", color: .green),
+        SidebarItem(id: 2, title: "Stirling-PDF", icon: "doc.fill", color: .red),
+        SidebarItem(id: 3, title: "n8n Automation", icon: "flowchart.fill", color: .orange),
+        SidebarItem(id: 4, title: "Langflow Graph", icon: "square.stack.3d.down.right.fill", color: .purple),
+        SidebarItem(id: 5, title: "Dify Platform", icon: "cpu.fill", color: .blue),
+        SidebarItem(id: 6, title: "Maxun Scraper", icon: "network", color: .teal)
+    ]
+    
     var body: some View {
         ZStack {
             VisualEffectView()
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                // Header Drawer
-                HStack(spacing: 12) {
-                    Text("AI Orchestrator")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .padding(.leading, 20)
-                    
-                    Picker("", selection: $selectedTab) {
-                        Text("Dashboard").tag(0)
-                        Text("Open WebUI").tag(1)
-                        Text("Stirling-PDF").tag(2)
-                        Text("n8n").tag(3)
-                        Text("Langflow").tag(4)
-                        Text("Dify").tag(5)
-                        Text("Maxun").tag(6)
+            HStack(spacing: 0) {
+                // Left Navigation Sidebar
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "shippingbox.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                        Text("Orchestrator")
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.bold)
+                        Spacer()
                     }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                    
+                    ScrollView {
+                        VStack(spacing: 4) {
+                            ForEach(sidebarItems) { item in
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                        selectedTab = item.id
+                                    }
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: item.icon)
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(selectedTab == item.id ? .white : item.color)
+                                            .frame(width: 24, height: 24)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .fill(selectedTab == item.id ? Color.white.opacity(0.15) : item.color.opacity(0.12))
+                                            )
+                                        Text(item.title)
+                                            .font(.system(.body, design: .rounded))
+                                            .fontWeight(selectedTab == item.id ? .semibold : .medium)
+                                            .foregroundColor(selectedTab == item.id ? .white : .primary)
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(selectedTab == item.id ? item.color : Color.clear)
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
                     
                     Spacer()
                 }
-                .padding(.vertical, 12)
-                .background(Color.primary.opacity(0.04))
+                .frame(width: 200)
+                .background(.ultraThinMaterial.opacity(0.85))
                 
                 Divider()
                 
-                // Tab Selection Routing
-                switch selectedTab {
-                case 0:
-                    DashboardView(tools: toolsStack, dify: difyStack, maxun: maxunStack, letta: lettaStack)
-                case 1:
-                    OrchestratedWebView(manager: toolsStack, url: "http://localhost:3000", title: "Open WebUI Chat")
-                case 2:
-                    OrchestratedWebView(manager: toolsStack, url: "http://localhost:8082", title: "Stirling-PDF Suite")
-                case 3:
-                    OrchestratedWebView(manager: toolsStack, url: "http://localhost:5678", title: "n8n Automation")
-                case 4:
-                    OrchestratedWebView(manager: toolsStack, url: "http://localhost:7860", title: "Langflow Agent Graph")
-                case 5:
-                    OrchestratedWebView(manager: difyStack, url: "http://localhost:8090", title: "Dify LLM Builder")
-                default:
-                    OrchestratedWebView(manager: maxunStack, url: "http://localhost:8086", title: "Maxun Visual Scraper")
+                // Right Detail Content Area
+                VStack(spacing: 0) {
+                    switch selectedTab {
+                    case 0:
+                        DashboardView(tools: toolsStack, dify: difyStack, maxun: maxunStack, letta: lettaStack)
+                    case 1:
+                        OrchestratedWebView(manager: toolsStack, url: "http://localhost:3000", title: "Open WebUI Chat")
+                    case 2:
+                        OrchestratedWebView(manager: toolsStack, url: "http://localhost:8082", title: "Stirling-PDF Suite")
+                    case 3:
+                        OrchestratedWebView(manager: toolsStack, url: "http://localhost:5678", title: "n8n Automation")
+                    case 4:
+                        OrchestratedWebView(manager: toolsStack, url: "http://localhost:7860", title: "Langflow Agent Graph")
+                    case 5:
+                        OrchestratedWebView(manager: difyStack, url: "http://localhost:8090", title: "Dify LLM Builder")
+                    default:
+                        OrchestratedWebView(manager: maxunStack, url: "http://localhost:8086", title: "Maxun Visual Scraper")
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }

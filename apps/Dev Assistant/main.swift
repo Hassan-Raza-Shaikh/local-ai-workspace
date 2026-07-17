@@ -551,46 +551,99 @@ class BrowserAgentManager: ObservableObject {
 }
 
 // MARK: - Presentation Layer (ContentView)
+struct SidebarItem: Identifiable {
+    let id: Int
+    let title: String
+    let icon: String
+    let color: Color
+}
+
+// MARK: - Presentation Layer (ContentView)
 struct ContentView: View {
     @State private var selectedTab = 0
+    
+    let sidebarItems = [
+        SidebarItem(id: 0, title: "Aider Coding", icon: "terminal.fill", color: .blue),
+        SidebarItem(id: 1, title: "OpenHands Sandbox", icon: "square.stack.3d.up.fill", color: .purple),
+        SidebarItem(id: 2, title: "Browser Agent", icon: "safari.fill", color: .orange)
+    ]
     
     var body: some View {
         ZStack {
             VisualEffectView()
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                // Tab Header Drawer
-                HStack(spacing: 12) {
-                    Text("Dev Assistant")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .padding(.leading, 20)
-                    
-                    Picker("", selection: $selectedTab) {
-                        Text("Aider Coding").tag(0)
-                        Text("OpenHands Agent").tag(1)
-                        Text("Browser-Use").tag(2)
+            HStack(spacing: 0) {
+                // Left Navigation Sidebar
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "cpu.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                        Text("Dev Assistant")
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.bold)
+                        Spacer()
                     }
-                    .pickerStyle(.segmented)
-                    .frame(width: 360)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                    
+                    ScrollView {
+                        VStack(spacing: 4) {
+                            ForEach(sidebarItems) { item in
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                        selectedTab = item.id
+                                    }
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: item.icon)
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(selectedTab == item.id ? .white : item.color)
+                                            .frame(width: 24, height: 24)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .fill(selectedTab == item.id ? Color.white.opacity(0.15) : item.color.opacity(0.12))
+                                            )
+                                        Text(item.title)
+                                            .font(.system(.body, design: .rounded))
+                                            .fontWeight(selectedTab == item.id ? .semibold : .medium)
+                                            .foregroundColor(selectedTab == item.id ? .white : .primary)
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(selectedTab == item.id ? item.color : Color.clear)
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
                     
                     Spacer()
                 }
-                .padding(.vertical, 12)
-                .background(Color.primary.opacity(0.04))
+                .frame(width: 200)
+                .background(.ultraThinMaterial.opacity(0.85))
                 
                 Divider()
                 
-                // Tab panels routing
-                switch selectedTab {
-                case 0:
-                    AiderView()
-                case 1:
-                    OpenHandsView()
-                default:
-                    BrowserAgentView()
+                // Right Detail Content Area
+                VStack(spacing: 0) {
+                    switch selectedTab {
+                    case 0:
+                        AiderView()
+                    case 1:
+                        OpenHandsView()
+                    default:
+                        BrowserAgentView()
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }

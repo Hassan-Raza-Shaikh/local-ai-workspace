@@ -275,6 +275,14 @@ class ServerManager: ObservableObject {
 }
 
 // MARK: - Presentation Layer (ContentView)
+struct SidebarItem: Identifiable {
+    let id: Int
+    let title: String
+    let icon: String
+    let color: Color
+}
+
+// MARK: - Presentation Layer (ContentView)
 struct ContentView: View {
     @State private var selectedTab = 0
     
@@ -295,39 +303,84 @@ struct ContentView: View {
         defaultPort: "7865"
     )
     
+    let sidebarItems = [
+        SidebarItem(id: 0, title: "ComfyUI Graph", icon: "circle.hexagongrid.fill", color: .purple),
+        SidebarItem(id: 1, title: "Fooocus Studio", icon: "photo.stack.fill", color: .orange)
+    ]
+    
     var body: some View {
         ZStack {
             VisualEffectView()
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                // Header Drawer
-                HStack(spacing: 12) {
-                    Text("Creative Studio")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .padding(.leading, 20)
-                    
-                    Picker("", selection: $selectedTab) {
-                        Text("ComfyUI Node Graph").tag(0)
-                        Text("Fooocus Art Studio").tag(1)
+            HStack(spacing: 0) {
+                // Left Navigation Sidebar
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "paintpalette.fill")
+                            .font(.title2)
+                            .foregroundColor(.purple)
+                        Text("Creative Studio")
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.bold)
+                        Spacer()
                     }
-                    .pickerStyle(.segmented)
-                    .frame(width: 380)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                    
+                    ScrollView {
+                        VStack(spacing: 4) {
+                            ForEach(sidebarItems) { item in
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                        selectedTab = item.id
+                                    }
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: item.icon)
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(selectedTab == item.id ? .white : item.color)
+                                            .frame(width: 24, height: 24)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .fill(selectedTab == item.id ? Color.white.opacity(0.15) : item.color.opacity(0.12))
+                                            )
+                                        Text(item.title)
+                                            .font(.system(.body, design: .rounded))
+                                            .fontWeight(selectedTab == item.id ? .semibold : .medium)
+                                            .foregroundColor(selectedTab == item.id ? .white : .primary)
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(selectedTab == item.id ? item.color : Color.clear)
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
                     
                     Spacer()
                 }
-                .padding(.vertical, 12)
-                .background(Color.primary.opacity(0.04))
+                .frame(width: 200)
+                .background(.ultraThinMaterial.opacity(0.85))
                 
                 Divider()
                 
-                // Server workspace rendering
-                if selectedTab == 0 {
-                    StudioWorkspaceView(manager: comfyui, title: "ComfyUI Node Generator", desc: "Start the local ComfyUI server to generate SDXL/Flux node logic workflow diagrams.")
-                } else {
-                    StudioWorkspaceView(manager: fooocus, title: "Fooocus Midjourney Alternative", desc: "Start the local Fooocus server to generate photorealistic image prompts.")
+                // Right Detail Content Area
+                VStack(spacing: 0) {
+                    if selectedTab == 0 {
+                        StudioWorkspaceView(manager: comfyui, title: "ComfyUI Node Generator", desc: "Start the local ComfyUI server to generate SDXL/Flux node logic workflow diagrams.")
+                    } else {
+                        StudioWorkspaceView(manager: fooocus, title: "Fooocus Midjourney Alternative", desc: "Start the local Fooocus server to generate photorealistic image prompts.")
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }

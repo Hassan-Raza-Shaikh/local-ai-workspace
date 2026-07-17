@@ -511,49 +511,102 @@ class ScriptRunner: ObservableObject {
 }
 
 // MARK: - SwiftUI Presentation Layer
+struct SidebarItem: Identifiable {
+    let id: Int
+    let title: String
+    let icon: String
+    let color: Color
+}
+
+// MARK: - SwiftUI Presentation Layer
 struct ContentView: View {
     @State private var selectedTab = 0
+    
+    let sidebarItems = [
+        SidebarItem(id: 0, title: "Downloader", icon: "arrow.down.circle.fill", color: .red),
+        SidebarItem(id: 1, title: "Transcriber", icon: "waveform.circle.fill", color: .purple),
+        SidebarItem(id: 2, title: "Doc Converter", icon: "doc.richtext.fill", color: .green),
+        SidebarItem(id: 3, title: "Web Scraper", icon: "globe.badge.chevron.backward.fill", color: .teal)
+    ]
     
     var body: some View {
         ZStack {
             VisualEffectView()
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                // Window drag area and custom title tab control
-                HStack(spacing: 12) {
-                    Text("Media Studio")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .padding(.leading, 20)
-                    
-                    Picker("", selection: $selectedTab) {
-                        Text("Downloader").tag(0)
-                        Text("Transcriber").tag(1)
-                        Text("Doc Converter").tag(2)
-                        Text("Web Scraper").tag(3)
+            HStack(spacing: 0) {
+                // Left Navigation Sidebar
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "play.rectangle.on.video.fill")
+                            .font(.title2)
+                            .foregroundColor(.red)
+                        Text("Media Studio")
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.bold)
+                        Spacer()
                     }
-                    .pickerStyle(.segmented)
-                    .frame(width: 360)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                    
+                    ScrollView {
+                        VStack(spacing: 4) {
+                            ForEach(sidebarItems) { item in
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                        selectedTab = item.id
+                                    }
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: item.icon)
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundColor(selectedTab == item.id ? .white : item.color)
+                                            .frame(width: 24, height: 24)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 6)
+                                                    .fill(selectedTab == item.id ? Color.white.opacity(0.15) : item.color.opacity(0.12))
+                                            )
+                                        Text(item.title)
+                                            .font(.system(.body, design: .rounded))
+                                            .fontWeight(selectedTab == item.id ? .semibold : .medium)
+                                            .foregroundColor(selectedTab == item.id ? .white : .primary)
+                                        Spacer()
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(selectedTab == item.id ? item.color : Color.clear)
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                    }
                     
                     Spacer()
                 }
-                .padding(.vertical, 12)
-                .background(Color.primary.opacity(0.04))
+                .frame(width: 200)
+                .background(.ultraThinMaterial.opacity(0.85))
                 
                 Divider()
                 
-                // Tab Selection views
-                switch selectedTab {
-                case 0:
-                    DownloaderView()
-                case 1:
-                    TranscriberView()
-                case 2:
-                    ConverterView()
-                default:
-                    ScraperView()
+                // Right Detail Content Area
+                VStack(spacing: 0) {
+                    switch selectedTab {
+                    case 0:
+                        DownloaderView()
+                    case 1:
+                        TranscriberView()
+                    case 2:
+                        ConverterView()
+                    default:
+                        ScraperView()
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
