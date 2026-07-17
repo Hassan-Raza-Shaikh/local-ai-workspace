@@ -85,6 +85,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         // Terminate OpenHands Docker container if active
         let process = Process()
+        var processEnv = ProcessInfo.processInfo.environment
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         process.arguments = ["stop", "openhands-app"]
         try? process.run()
@@ -180,6 +183,9 @@ class AiderManager: ObservableObject {
     
     private func executeAider(prompt: String) {
         let process = Process()
+        var processEnv = ProcessInfo.processInfo.environment
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        process.environment = processEnv
         self.process = process
         process.executableURL = URL(fileURLWithPath: "/opt/miniconda3/bin/aider")
         
@@ -194,6 +200,7 @@ class AiderManager: ObservableObject {
         
         // Export Gemini key from environment
         var env = ProcessInfo.processInfo.environment
+        env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
         if let envContent = try? String(contentsOfFile: "/Users/hassan/local-ai/.env", encoding: .utf8) {
             let lines = envContent.components(separatedBy: .newlines)
             for line in lines {
@@ -265,11 +272,15 @@ class AiderManager: ObservableObject {
     func startWebGui() {
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
+            var processEnv = ProcessInfo.processInfo.environment
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: "/opt/miniconda3/bin/aider")
             process.arguments = ["--model", self.selectedModel, "--gui"]
             process.currentDirectoryURL = URL(fileURLWithPath: self.activeRepo)
             
             var env = ProcessInfo.processInfo.environment
+            env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
             if let envContent = try? String(contentsOfFile: "/Users/hassan/local-ai/.env", encoding: .utf8) {
                 let lines = envContent.components(separatedBy: .newlines)
                 for line in lines {
@@ -330,12 +341,18 @@ class OpenHandsManager: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             // Stop old docker first
             let stopProcess = Process()
+            var stopProcessEnv = ProcessInfo.processInfo.environment
+            stopProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            stopProcess.environment = stopProcessEnv
             stopProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
             stopProcess.arguments = ["stop", "openhands"]
             try? stopProcess.run()
             stopProcess.waitUntilExit()
             
             let rmProcess = Process()
+            var rmProcessEnv = ProcessInfo.processInfo.environment
+            rmProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            rmProcess.environment = rmProcessEnv
             rmProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
             rmProcess.arguments = ["rm", "openhands"]
             try? rmProcess.run()
@@ -347,6 +364,9 @@ class OpenHandsManager: ObservableObject {
             }
             
             let runProcess = Process()
+            var runProcessEnv = ProcessInfo.processInfo.environment
+            runProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            runProcess.environment = runProcessEnv
             self.process = runProcess
             runProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
             
@@ -410,6 +430,9 @@ class OpenHandsManager: ObservableObject {
         
         DispatchQueue.global(qos: .userInitiated).async {
             let stopProcess = Process()
+            var stopProcessEnv = ProcessInfo.processInfo.environment
+            stopProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            stopProcess.environment = stopProcessEnv
             stopProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
             stopProcess.arguments = ["stop", "openhands"]
             try? stopProcess.run()
@@ -449,6 +472,9 @@ class BrowserAgentManager: ObservableObject {
         
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
+            var processEnv = ProcessInfo.processInfo.environment
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            process.environment = processEnv
             self.process = process
             process.executableURL = URL(fileURLWithPath: "/opt/miniconda3/bin/python")
             

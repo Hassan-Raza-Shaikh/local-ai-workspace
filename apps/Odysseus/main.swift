@@ -85,6 +85,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         // Stop Odysseus Compose Stack
         let process = Process()
+        var processEnv = ProcessInfo.processInfo.environment
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         process.arguments = ["compose", "-f", "/Users/hassan/local-ai/odysseus/docker-compose.yml", "down"]
         try? process.run()
@@ -161,6 +164,9 @@ class WorkspaceManager: ObservableObject {
     
     func checkStatus() {
         let process = Process()
+        var processEnv = ProcessInfo.processInfo.environment
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        process.environment = processEnv
         process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
         process.arguments = ["ps", "-a", "--filter", "name=odysseus-app", "--format", "{{.State}}"]
         let pipe = Pipe()
@@ -196,6 +202,9 @@ class WorkspaceManager: ObservableObject {
         
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
+            var processEnv = ProcessInfo.processInfo.environment
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            process.environment = processEnv
             self.process = process
             process.executableURL = URL(fileURLWithPath: "/bin/bash")
             process.arguments = ["/Users/hassan/local-ai/start_workspace.sh"]
@@ -203,6 +212,7 @@ class WorkspaceManager: ObservableObject {
             
             // Set headless environment to prevent popping open default browser window
             var env = ProcessInfo.processInfo.environment
+            env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
             env["HEADLESS"] = "1"
             process.environment = env
             
@@ -259,6 +269,9 @@ class WorkspaceManager: ObservableObject {
         
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
+            var processEnv = ProcessInfo.processInfo.environment
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
             process.arguments = ["compose", "-f", "/Users/hassan/local-ai/odysseus/docker-compose.yml", "down"]
             process.currentDirectoryURL = URL(fileURLWithPath: "/Users/hassan/local-ai/odysseus")
@@ -308,6 +321,9 @@ class WorkspaceManager: ObservableObject {
     private func querySystemStats() {
         // Query CPU Usage
         let cpuProcess = Process()
+        var cpuProcessEnv = ProcessInfo.processInfo.environment
+        cpuProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        cpuProcess.environment = cpuProcessEnv
         cpuProcess.executableURL = URL(fileURLWithPath: "/usr/bin/top")
         cpuProcess.arguments = ["-l", "1", "-n", "0"]
         let cpuPipe = Pipe()
@@ -333,6 +349,9 @@ class WorkspaceManager: ObservableObject {
         
         // Query Free RAM
         let memProcess = Process()
+        var memProcessEnv = ProcessInfo.processInfo.environment
+        memProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        memProcess.environment = memProcessEnv
         memProcess.executableURL = URL(fileURLWithPath: "/usr/bin/vm_stat")
         let memPipe = Pipe()
         memProcess.standardOutput = memPipe

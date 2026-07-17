@@ -85,6 +85,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         // Terminate ComfyUI background server
         let comfyProcess = Process()
+        var comfyProcessEnv = ProcessInfo.processInfo.environment
+        comfyProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        comfyProcess.environment = comfyProcessEnv
         comfyProcess.executableURL = URL(fileURLWithPath: "/usr/bin/pkill")
         comfyProcess.arguments = ["-f", "comfyui.*main.py"]
         try? comfyProcess.run()
@@ -92,6 +95,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Terminate Fooocus background server
         let fooocusProcess = Process()
+        var fooocusProcessEnv = ProcessInfo.processInfo.environment
+        fooocusProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        fooocusProcess.environment = fooocusProcessEnv
         fooocusProcess.executableURL = URL(fileURLWithPath: "/usr/bin/pkill")
         fooocusProcess.arguments = ["-f", "fooocus.*entry_with_update.py"]
         try? fooocusProcess.run()
@@ -175,6 +181,9 @@ class ServerManager: ObservableObject {
         
         DispatchQueue.global(qos: .userInitiated).async {
             let process = Process()
+            var processEnv = ProcessInfo.processInfo.environment
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            process.environment = processEnv
             self.process = process
             process.executableURL = URL(fileURLWithPath: "/bin/bash")
             process.arguments = [self.launchScript]
@@ -182,6 +191,7 @@ class ServerManager: ObservableObject {
             
             // Set high water mark ratio for MPS optimization
             var env = ProcessInfo.processInfo.environment
+            env["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
             env["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
             env["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
             process.environment = env
@@ -243,6 +253,9 @@ class ServerManager: ObservableObject {
             
             // Reclaim resources by forcefully termination of matching python processes
             let killProcess = Process()
+            var killProcessEnv = ProcessInfo.processInfo.environment
+            killProcessEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            killProcess.environment = killProcessEnv
             killProcess.executableURL = URL(fileURLWithPath: "/usr/bin/pkill")
             if self.launchScript.contains("comfyui") {
                 killProcess.arguments = ["-f", "comfyui.*main.py"]

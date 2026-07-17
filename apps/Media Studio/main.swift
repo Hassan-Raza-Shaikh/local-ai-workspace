@@ -212,6 +212,9 @@ class Downloader: ObservableObject {
         }
         
         let process = Process()
+        var processEnv = ProcessInfo.processInfo.environment
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        process.environment = processEnv
         self.process = process
         process.executableURL = URL(fileURLWithPath: "/opt/homebrew/bin/yt-dlp")
         
@@ -315,6 +318,9 @@ class Downloader: ObservableObject {
             }
             
             let process = Process()
+            var processEnv = ProcessInfo.processInfo.environment
+            processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+            process.environment = processEnv
             process.executableURL = URL(fileURLWithPath: "/opt/homebrew/bin/brew")
             process.arguments = ["upgrade", "yt-dlp"]
             
@@ -422,6 +428,9 @@ class ScriptRunner: ObservableObject {
         }
         
         let process = Process()
+        var processEnv = ProcessInfo.processInfo.environment
+        processEnv["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin"
+        process.environment = processEnv
         self.process = process
         process.executableURL = URL(fileURLWithPath: executable)
         process.arguments = arguments
