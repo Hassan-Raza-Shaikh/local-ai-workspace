@@ -3,9 +3,43 @@ import Foundation
 import AppKit
 import WebKit
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillTerminate(_ notification: Notification) {
+        // Stop Core Tools Compose Stack
+        let coreProcess = Process()
+        coreProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
+        coreProcess.arguments = ["compose", "-f", "/Users/hassan/local-ai/docker-compose.tools.yml", "down"]
+        try? coreProcess.run()
+        coreProcess.waitUntilExit()
+        
+        // Stop Dify Compose Stack
+        let difyProcess = Process()
+        difyProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
+        difyProcess.arguments = ["compose", "-f", "/Users/hassan/local-ai/dify/docker/docker-compose.yaml", "down"]
+        try? difyProcess.run()
+        difyProcess.waitUntilExit()
+        
+        // Stop Maxun Compose Stack
+        let maxunProcess = Process()
+        maxunProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
+        maxunProcess.arguments = ["compose", "-f", "/Users/hassan/local-ai/maxun/docker-compose.yml", "down"]
+        try? maxunProcess.run()
+        maxunProcess.waitUntilExit()
+        
+        // Stop Letta Agent containers
+        let lettaProcess = Process()
+        lettaProcess.executableURL = URL(fileURLWithPath: "/usr/local/bin/docker")
+        lettaProcess.arguments = ["stop", "letta-server", "letta-db"]
+        try? lettaProcess.run()
+        lettaProcess.waitUntilExit()
+    }
+}
+
 // MARK: - App Entrypoint
 @main
 struct AIOrchestratorApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
